@@ -1,4 +1,5 @@
 # Du capteur à la mesure : rapport de projet
+*Par Nathan Pfeffenn-Deganis et Raphaël Casimir, ING4-SE*
 
 ## Introduction
 À venir.
