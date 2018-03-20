@@ -50,5 +50,99 @@ Le capteur OP599 est un phototransistor qui est sensible aux longueurs d'onde in
 Le transistor intégré est un NPN et il sera passant quant le capteur sera éclairé en infrarouge.
 Si l'on veut que **la tension perçue en sortie monte quand le capteur est éclairé** il faudra utiliser le montage de **type 1**, si l'on veut qu'elle **baisse**, on utilisera le **type 2**.
 
+## Conception de la chaine de mesure
+
+Dans un premier temps nous avons décidé d'observer la sortie du capteur avec le montage de la figure 1, Rc valant 1.5 kilo Ohms.
+
+Nous avons observé un signal numérique TTL, comme le montre la figure 3.
+
+![Sortie du capteur sur un oscilloscope](capture_osc_1.bmp "Capture de la sortie du capteur sur un oscilloscope")
+
+Le signal le plus court que le microcontrôleur aura à distinguer aura une période de 0.2 ms (5 kHz, un état haut de 0.1ms environ). Le temps de descente ou de montée étant d'une 40aine de microsecondes, la transition sera bien discernable de l'état haut ou bas (dure 5 fois moins longtemps).
+
+La chaine de mesure nécessaire est alors très simple, présentée en figure 4.
+
+![Diagramme-bloc de la chaine de mesure](measure_chain.png "Diagramme-bloc de la chaine de mesure")
+
+L'émetteur envoie un signal lumineux infrarouge reçu par le capteur qui le transforme en signal électrique / niveaux logiques. Ensuite ce signal est transmis à un pin numérique du microcontrôleur, ce qui permet d'interpréter l'information selon le protocole de communication utilisé par l'émetteur. Enfin, l'information traitée, les caractères résultants sont envoyés via le module série du microcontrôleur sur le moniteur série d'un ordinateur par exemple.
+
+Voici un premier jet de l'algorithme permettant de décoder le protocole de l'émetteur, et donc récupérer le message :
+
+```c
+// Algorithme / pseudo-code
+int first = 0; // première valeur de  temps
+int second =0; //// première valeur de  temps
+int res = 1; /// valeur de l'écart
+///ascii tableau de caractère ascii caractère ASCII
+char Ch[100]; /// tableau tampon pour les caractères
+int i = 0; /// incrémentation des chars 
+int j= 0; /// incrémentation des bits
+bool which = 0; /// choix de la valeur de temps
+int ends = 0; /// choix de temps
+int inPin;
+void setup() {
+// Input mode for the pin which will receive the signal inPin
+
+}
+
+void loop() {
+  // Si nous n'avons pas reçu le signal de départ
+  if (ends == 0){
+  inPin = 1;
+    if () // si la lecture du pin est à 0
+       if (which == 0){  
+          which = !which;
+          first = micros()// first prend le temps depuis 0  
+          }
+        else{
+          which = !which;
+          second = micros();// second prend le temps depuis 0  
+          end = second - first; // end récupère la valeur entre les deux derniers falling edge
+          }
+       if () // si end est compris entre deux valeur très proche de la période attendue entre le signal de départ et le premier bit du premier
+       { ends = 1;
+         }
+  }
+  //si le signal démarre
+   if (ends == 1){
+  inPin = 1;
+    if () // si la lecture du pin est à 0
+       if (which == 0){  
+          which = !which;
+          first = micros()// first prend le temps depuis 0  
+          }
+        else{
+          which = !which;
+          second = micros();// second prend le temps depuis 0  
+          end = second - first; // end récupère la valeur entre les deux derniers falling edge
+          }
+       if () // si ends compris entre deux valeur très proche de la période attendue entre le dernier bit et le bit de départ 
+       { ends = 2;
+         }
+        else if()//temps pour un 0
+       {
+         ascii[j] = 0;
+         j++;
+       }
+       else if()//temps pour un 1
+       {
+         ascii[j] = 0;
+         j++
+       }
+       else if()//temps pour un espace
+       {
+         j==0
+         //Conversion de ascii dans char[i] grâce au code ascci donné en exemple dans un fichier arduino;
+        i++; 
+       }}
+       if (ends ==2){
+       //affichage du tableau de char avec serial  
+       }
+
+
+}
+
+```
+
 \fakesection{Annexes}
 \includepdf[pages={1-3}]{OP599_Series_datasheet_annotee.pdf}
