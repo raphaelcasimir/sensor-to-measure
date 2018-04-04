@@ -29,8 +29,8 @@ char val = 0;
 char prev=0;
 
 char updt=0;
-unsigned long lastUpdtTime=0;
-unsigned int updtTime=0;
+long lastUpdtTime=0;
+unsigned long updtTime=0;
 
 char state = WAIT;
 
@@ -57,13 +57,13 @@ bool timeToByte(unsigned int time) {
       else { // LOW
         currentByte = currentByte << 1;
       }
-      Serial.print(timeStore[currentBit] < sum, BIN);
-      Serial.print(" ");
-      Serial.println(timeStore[currentBit]);
+      // Serial.print(timeStore[currentBit] < sum, BIN);
+      // Serial.print(" ");
+      // Serial.println(timeStore[currentBit]);
     }
-    Serial.println((char)currentByte);
-    Serial.println(" ");
-    delay(277);
+    // Serial.println((char)currentByte);
+    // Serial.println(" ");
+    //delay(277);
     currentBit = 0;
     sum = 0;
     return 1;
@@ -75,57 +75,46 @@ bool timeToByte(unsigned int time) {
 void setup() {
 // Input mode for the pin which will receive the signal Inpin
 pinMode(IP, INPUT);
-Serial.begin(9600);
+Serial.begin(115200);
 }
 
 void loop() {
 
-  val = digitalRead(IP);
+  val = digitalRead(IP); // Getting the state of input pin
   
-  if(val && !prev){
-    prev = 1;
-    t = micros();
+  if(val && !prev){ // If IP state changed from 0 to 1
+    prev = 1; // Update the current state (future PREVious state)
+    t = micros(); // Take time measure
   }
-  if(!val && prev)
+  if(!val && prev) // If it switched back from 1 to 0
   {
-    prev = 0;
-    res = micros() - t;
-    updt=1;
-    lastUpdtTime = micros();
+    prev = 0; // Update current state
+    res = micros() - t; // Store the "HIGH" duration
+    updt=1; // Tell the rest of the program that a new info has arrived
   }
 
-  if (updt == 1) {
-    if( (res > 300) && (res < 400) ){
+  if (updt == 1) { // Start processing
+
+    if( (res > 280) && (res < 420) ){ // Start condition
       state = LISTEN;
       updt = 0;
     }
 
-    // if( (updtTime > 400) && (updtTime < 600) ){
-    //   state = NEW_BYTE;
-    //   updt = 0;
-    // }
-
-    // if( (updtTime > 15000) && (updtTime < 25000) ){
-    //   state = STOP;
-    //   updt = 0;
-    // }
-
-    if (((state == LISTEN) || (state = NEW_BYTE) ) && (updt == 1)){
+    if ((state == LISTEN) && (updt == 1)){
       if(timeToByte(res)){
         finalBytes[finalCount] = currentByte;
         finalCount++;
       }
     }
 
-    if((state == STOP) && (finalCount == 8)) {
+    if((state == STOP) || (finalCount == 8)) {
       finalBytes[9] = '\0';
-      for(currentBit = 0; currentBit<9; currentBit++)
-        Serial.println(finalBytes[currentBit], HEX);
+      Serial.print("Message is : ");
+      Serial.println(finalBytes);
       finalCount = 0;
     }
 
     updt = 0;
-    updtTime = lastUpdtTime - micros();
   }
 
   
