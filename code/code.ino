@@ -2,7 +2,6 @@
 
 #define WAIT 0 // Waiting for start condition
 #define LISTEN 1 // Listening for first byte
-#define NEW_BYTE 2 // Next byte contition heard
 #define STOP 3 // Message recorded, sending
 
 
@@ -16,7 +15,7 @@ char currentBit = 0;
 unsigned int sum;
 int timeStore[8];
 
-char finalBytes[9]; /// tabelau final pour les caractères
+char finalBytes[20]; /// tabelau final pour les caractères
 char finalCount = 0;
 
 int i = 0;
@@ -29,7 +28,8 @@ char val = 0;
 char prev=0;
 
 char updt=0;
-long lastUpdtTime=0;
+
+unsigned long lastUpdtTime=0;
 unsigned long updtTime=0;
 
 char state = WAIT;
@@ -91,31 +91,44 @@ void loop() {
     prev = 0; // Update current state
     res = micros() - t; // Store the "HIGH" duration
     updt=1; // Tell the rest of the program that a new info has arrived
+    lastUpdtTime = millis();
   }
 
-  if (updt == 1) { // Start processing
+  if((0 != lastUpdtTime) && (WAIT != state)){
+      updtTime = millis() - lastUpdtTime;
+  }
+
+  if (updtTime > 6) {
+    state = STOP;
+  }
+
+  if (updt || (STOP == state)) { // Start processing
 
     if( (res > 280) && (res < 420) ){ // Start condition
       state = LISTEN;
       updt = 0;
     }
 
-    if ((state == LISTEN) && (updt == 1)){
+    if ((LISTEN == state) && (1 == updt)){
       if(timeToByte(res)){
         finalBytes[finalCount] = currentByte;
         finalCount++;
       }
     }
 
-    if((state == STOP) || (finalCount == 8)) {
-      finalBytes[9] = '\0';
+    if(STOP == state) {
+
+      finalBytes[finalCount] = '\0';
       Serial.print("Message is : ");
       Serial.println(finalBytes);
+      Serial.println("");
       finalCount = 0;
+
+      updtTime = 0;
+      state = WAIT;
     }
 
     updt = 0;
   }
 
-  
 }
