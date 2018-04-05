@@ -2,7 +2,7 @@
 
 #define WAIT 0 // Waiting for start condition
 #define LISTEN 1 // Listening for first byte
-#define STOP 3 // Message recorded, sending
+#define STOP 2 // Message recorded, sending
 
 
 unsigned long t; // Valeur de  temps
@@ -33,8 +33,6 @@ unsigned long lastUpdtTime=0;
 unsigned long updtTime=0;
 
 char state = WAIT;
-
-unsigned int store[56];
 
 bool timeToByte(unsigned int time) {
 
