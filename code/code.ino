@@ -120,7 +120,12 @@ void loop() {
       Serial.print("Message is : ");
       Serial.println(finalBytes);
       Serial.println("");
+
+      // Hardenning: in case of misreading, start over
       finalCount = 0;
+      currentBit = 0;
+      currentByte = 0;
+      sum = 0;
 
       updtTime = 0;
       state = WAIT;

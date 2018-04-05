@@ -8,4 +8,4 @@ Des aides seront postées ici et/ou sur le wiki pour les autres groupes.
 	```bash
 	avrdude -p m328p -P /dev/ttyUSB1 -c arduino -b 57600 -U flash:w:flash_hck.bin
 	```
-	Par exemple pour flasher le vôtre.
+	Par exemple pour re-flasher le vôtre.
