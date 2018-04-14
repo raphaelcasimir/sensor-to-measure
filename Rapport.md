@@ -144,5 +144,15 @@ void loop() {
 
 ```
 
+ce premier saulette de code nous a permis d'avoir une idée générale du fonctionnement de l'algorithme. Nénamoins il n'est pas du tout complet et a du évoluer un certain nombre de fois. les précédentes versions du code sont disponible sur ce dépot git : ()
+
+les principaux points de problèmes rencontés ont été les suivants :
+
+	-Une mauvaise réception du signal. Nous souhaitions récupérer le changement d'état ud signal en un tour de boucle. ce type de réceptions nous donnait des valeurs aléatoires 
+	
+	-La récupération d'un changement d'état uniquement lors du front montant.  
+
+	-
+
 \fakesection{Annexes}
 \includepdf[pages={1-3}]{OP599_Series_datasheet_annotee.pdf}
