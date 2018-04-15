@@ -16,4 +16,4 @@ Comme vous le savez, le code fonctionne, vous pouvez tester votre montage avec e
 	
 ## Rapport
 
-Le rapport est presque fini, cependant le code inclus dans le document n'est pas à jour. Comme le reste, vous pouvez vous en inspirer. Il y a une version PDF et une en-ligne (le .md).
+Le rapport est maintenant terminé. Il y a une version PDF et une en-ligne (fichier .md).
